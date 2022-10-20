@@ -1,0 +1,17 @@
+version: "3.7"
+
+services:
+  gram2twitterbot:
+    container_name: gram2twitterbot
+    build:
+      context: ./
+      dockerfile: dev.Dockerfile
+    command: ["npm", "run", "dev"]
+    environment:
+      NODE_ENV: "local"
+      TWITTER_API_KEY: ""
+      TWITTER_API_KEY_SECRET: ""
+      TWITTER_ACCESS_TOKEN: ""
+      TWITTER_ACCESS_TOKEN_SECRET: ""
+    volumes:
+      - ./src:/app/src

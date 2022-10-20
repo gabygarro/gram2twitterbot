@@ -1,0 +1,34 @@
+{
+  "name": "gram2twitterbot",
+  "version": "1.0.0",
+  "description": "Bot that listens for posts on a Telegram channel and reposts to Twitter",
+  "main": "index.js",
+  "scripts": {
+    "build": "npx tsc",
+    "dev": "node dist/app.js"
+  },
+  "repository": {
+    "type": "git",
+    "url": "git+https://github.com/gabygarro/gram2twitterbot.git"
+  },
+  "keywords": [],
+  "author": "",
+  "license": "ISC",
+  "bugs": {
+    "url": "https://github.com/gabygarro/gram2twitterbot/issues"
+  },
+  "homepage": "https://github.com/gabygarro/gram2twitterbot#readme",
+  "devDependencies": {
+    "@types/node": "^18.11.2",
+    "@typescript-eslint/eslint-plugin": "^5.40.1",
+    "eslint": "^8.25.0",
+    "eslint-config-standard-with-typescript": "^23.0.0",
+    "eslint-plugin-import": "^2.26.0",
+    "eslint-plugin-n": "^15.3.0",
+    "eslint-plugin-promise": "^6.1.1",
+    "typescript": "^4.8.4"
+  },
+  "dependencies": {
+    "twitter-api-v2": "^1.12.8"
+  }
+}
