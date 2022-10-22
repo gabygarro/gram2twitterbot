@@ -8,7 +8,7 @@ const WAIT_PERIOD = 60000; // 1 min
 const media_name = "file";
 const FORWARDING_CHAT_ID: number = Number(process.env.FORWARDING_CHAT_ID || 0);
 
-downloadMediaQueue.process(async ({ data: { file_id, message_id } }, done) => {
+downloadMediaQueue.process(async ({ data: { file_id, message_id, mime_type } }, done) => {
     try {
       console.log(`[${new Date().toUTCString()} - ${message_id}]: Starting media download`);
       const fileWriter = fs.createWriteStream(media_name);
@@ -22,7 +22,7 @@ downloadMediaQueue.process(async ({ data: { file_id, message_id } }, done) => {
       });
       stream.on('end', () => {
         console.log(`[${new Date().toUTCString()} - ${message_id}]: Finished downloading media`);
-        uploadMediaToTwitter(done, media_name, message_id);
+        uploadMediaToTwitter(done, media_name, message_id, mime_type);
       });
     } catch (error) {
       console.log(error);
@@ -33,17 +33,22 @@ downloadMediaQueue.process(async ({ data: { file_id, message_id } }, done) => {
 const bot = new TelegramBot(TELEGRAM_BOT_TOKEN, { polling: true });
 
 bot.on('channel_post', (message: Message) => {
-    const { message_id, photo, video, sender_chat } = message;
-    if (!photo && !video ) return;
-    const file_id = photo ? photo[photo.length -1].file_id : video.file_id;
-    console.log(`[${new Date().toUTCString()} - ${message_id}]: ${photo ? 'Photo' : 'Video'} was uploaded to channel`);
-    setTimeout(async () => {
-        try {
-            // Check if the message containing the photo was deleted by trying to forward it
-            await bot.forwardMessage(FORWARDING_CHAT_ID, sender_chat.id, message_id);
-            downloadMediaQueue.add({ file_id, message_id });
-        } catch (error) {
-            console.log(`[${new Date().toUTCString()} - ${message_id}]: Media was deleted before wait period`);
-        }
-    }, WAIT_PERIOD);
+    try {
+        const { message_id, photo, video, sender_chat } = message;
+        if (!photo && !video ) return;
+        const file_id = photo ? photo[photo.length -1].file_id : video.file_id;
+        console.log(`[${new Date().toUTCString()} - ${message_id}]: ${photo ? 'Photo' : 'Video'} was uploaded to channel`);
+        setTimeout(async () => {
+            try {
+                // Check if the message containing the photo was deleted by trying to forward it
+                await bot.forwardMessage(FORWARDING_CHAT_ID, sender_chat.id, message_id);
+                downloadMediaQueue.add({ file_id, message_id, mime_type: video?.mime_type });
+            } catch (error) {
+                console.log(error);
+                console.log(`[${new Date().toUTCString()} - ${message_id}]: Media was deleted before wait period`);
+            }
+        }, WAIT_PERIOD);
+    } catch (error) {
+        console.log(error);
+    }
 });
