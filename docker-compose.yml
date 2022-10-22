@@ -7,11 +7,29 @@ services:
       context: ./
       dockerfile: dev.Dockerfile
     command: ["npm", "run", "dev"]
+    depends_on:
+      - redis
     environment:
       NODE_ENV: "local"
       TWITTER_API_KEY: ""
       TWITTER_API_KEY_SECRET: ""
       TWITTER_ACCESS_TOKEN: ""
       TWITTER_ACCESS_TOKEN_SECRET: ""
+      TELEGRAM_BOT_TOKEN: ""
+      REDIS_HOST: redis
+      REDIS_PORT: 6379
+      REDIS_PASSWORD: eYVX7EwVmmxKPCDmwMtyKVge8oLd2t81
+      FORWARDING_CHAT_ID: ""
     volumes:
       - ./src:/app/src
+  redis:
+    image: redis:6.2-alpine
+    restart: always
+    ports:
+      - "6379:6379"
+    command: redis-server --save 20 1 --loglevel warning --requirepass eYVX7EwVmmxKPCDmwMtyKVge8oLd2t81
+    volumes:
+      - cache:/data
+volumes:
+  cache:
+    driver: local

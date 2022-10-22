@@ -7,4 +7,5 @@ services:
       TWITTER_API_KEY_SECRET: ""
       TWITTER_ACCESS_TOKEN: ""
       TWITTER_ACCESS_TOKEN_SECRET: ""
-      
+      TELEGRAM_BOT_TOKEN: ""
+      FORWARDING_CHAT_ID: ""
