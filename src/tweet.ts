@@ -12,7 +12,7 @@ const client = new Twitter({
   accessSecret: TWITTER_ACCESS_TOKEN_SECRET,
 });
 
-export const uploadPhotoToTwitter = async (done, filename, message_id) => {
+export const uploadMediaToTwitter = async (done, filename, message_id) => {
   console.log(`[${new Date().toUTCString()} - ${message_id}]: Starting twitter upload`);
   const mediaIds = await Promise.all([
     client.v1.uploadMedia(filename)
